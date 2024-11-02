@@ -8,6 +8,6 @@ namespace FilmFinder.Models
 {
     public class Genre
     {
-        public string Name { get; set;; }
+        public string genre { get; set;}
     }
 }

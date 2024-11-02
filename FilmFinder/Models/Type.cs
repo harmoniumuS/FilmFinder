@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FilmFinder
+namespace FilmFinder.Models
 {
-    public enum ProductionStatus
+    public enum Type
     {
-        FILMING, PRE_PRODUCTION, COMPLETED, ANNOUNCED, UNKNOWN, POST_PRODUCTION
+        FILM, VIDEO, TV_SERIES, MINI_SERIES, TV_SHOW
     }
 }

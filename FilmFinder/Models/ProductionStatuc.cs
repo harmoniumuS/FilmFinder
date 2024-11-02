@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace FilmFinder.Models
 {
-    public class Country
+    public enum ProductionStatus
     {
-        public string country { get; set; }
+        FILMING, PRE_PRODUCTION, COMPLETED, ANNOUNCED, UNKNOWN, POST_PRODUCTION
     }
 }

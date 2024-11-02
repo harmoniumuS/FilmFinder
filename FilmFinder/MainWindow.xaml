@@ -1,12 +1,13 @@
 ﻿<Window x:Class="FilmFinder.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:FilmFinder"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Film Finder" Height="450" Width="800">
     <Grid>
-
+        <StackPanel>
+            <TextBlock Text="{Binding SelectedMovie.NameRu}" FontSize="24" />
+            <TextBlock Text="{Binding SelectedMovie.RatingKinopoisk}" />
+            <TextBlock Text="{Binding SelectedMovie.Description}" TextWrapping="Wrap" />
+            <Image Source="{Binding SelectedMovie.PosterUrl}" Width="200" />
+        </StackPanel>
     </Grid>
 </Window>

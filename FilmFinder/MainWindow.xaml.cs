@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using FilmFinder.ViewModel;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,9 +17,12 @@ namespace FilmFinder
     /// </summary>
     public partial class MainWindow : Window
     {
+        private MovieViewModel _viewModel;
         public MainWindow()
         {
             InitializeComponent();
+            _viewModel = new MovieViewModel();
+            DataContext = _viewModel;
         }
     }
 }
