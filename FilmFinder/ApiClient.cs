@@ -9,6 +9,8 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using FilmFinder.DataBase;
+using Microsoft.EntityFrameworkCore;
 
 namespace FilmFinder
 {
@@ -28,13 +30,16 @@ namespace FilmFinder
         
         public async Task<List<Film>> GetMoviesAsync()
         {
+            using (var db = new AppDbContext())
+            {
+                var cathedFilms = await db.Films.ToListAsync();
+                if (cathedFilms.Any())
+                {
+                    return cathedFilms; 
+                }
+            }
             var response = await _httpClient.GetAsync($"{BaseUrl}/films");
             response.EnsureSuccessStatusCode();
-            /*
-                        var jsonResponse = await response.Content.ReadAsStringAsync();
-                        var films = JsonConvert.DeserializeObject<List<Film>>(jsonResponse);
-                        return films;
-            */
             var settings = new JsonSerializerSettings
             {
                 ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
@@ -47,13 +52,27 @@ namespace FilmFinder
             {
                 throw new Exception("Не удалось получить фильмы из ответа API.");
             }
+            using (var db = new AppDbContext())
+            {
+                db.Films.AddRange(apiResponse.Films);
+                await db.SaveChangesAsync();
+            }
             return apiResponse?.Films;
 
         }
 
-        public async Task<Film> GetMovieAsync(int movieId)
+        public async Task<Film> GetMovieAsync(int filmId)
         {
-            var response = await _httpClient.GetAsync($"{BaseUrl}/films/{movieId}");
+
+            using (var db = new AppDbContext())
+            {
+                var cathedFilm = await db.Films.FindAsync(filmId);
+                if (cathedFilm!=null)
+                {
+                    return cathedFilm;
+                }
+            }
+           var response = await _httpClient.GetAsync($"{BaseUrl}/films/{filmId}");
 
             
             if (!response.IsSuccessStatusCode)
@@ -66,8 +85,8 @@ namespace FilmFinder
             };
 
             var jsonResponse = await response.Content.ReadAsStringAsync();
-            var movie = JsonConvert.DeserializeObject<Film>(jsonResponse,settings);
-            return movie;
+            var film = JsonConvert.DeserializeObject<Film>(jsonResponse,settings);
+            return film;
         }
     }
 }

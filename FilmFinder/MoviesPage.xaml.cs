@@ -27,13 +27,13 @@ namespace FilmFinder
         {
             InitializeComponent();
             _viewModel = new MovieViewModel();
-            LoadMovie(movieId);
+            LoadFilm(movieId);
             DataContext = _viewModel;
         }
 
-        private async void LoadMovie(int movieId)
+        private async void LoadFilm(int movieId)
         {
-            await _viewModel.LoadMovieDetails(movieId);
+            await _viewModel.LoadFilmDetails(movieId);
             MoviesListView.ItemsSource = _viewModel.Movies;
         }
 
@@ -43,7 +43,7 @@ namespace FilmFinder
             {
                 _viewModel.SelectedMovie = selectedMovie;
                 MovieDetailsPanel.Visibility = Visibility.Visible;
-                _viewModel.LoadMovieDetails(selectedMovie.KinopoiskId);
+                _viewModel.LoadFilmDetails(selectedMovie.KinopoiskId);
             }
             else
             {

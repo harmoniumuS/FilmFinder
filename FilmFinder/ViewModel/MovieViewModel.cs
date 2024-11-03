@@ -30,7 +30,7 @@ namespace FilmFinder.ViewModel
                 OnPropertyChanged(nameof(SelectedMovie));
                 if (_selectedMovie!=null)
                 {
-                    LoadMovieDetails(_selectedMovie.KinopoiskId);
+                    LoadFilmDetails(_selectedMovie.KinopoiskId);
                 }
             }
         }
@@ -89,7 +89,7 @@ namespace FilmFinder.ViewModel
                 _requestCount = 0;
             }
         }
-        public async Task LoadMovieDetails(int movieId)
+        public async Task LoadFilmDetails(int movieId)
         {
             SelectedMovie = await _apiClient.GetMovieAsync(movieId); 
             OnPropertyChanged(nameof(SelectedMovie)); 
