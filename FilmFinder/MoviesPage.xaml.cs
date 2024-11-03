@@ -39,7 +39,7 @@ namespace FilmFinder
 
         private void MoviesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (MoviesListView.SelectedItem is Movie selectedMovie)
+            if (MoviesListView.SelectedItem is Film selectedMovie)
             {
                 _viewModel.SelectedMovie = selectedMovie;
                 MovieDetailsPanel.Visibility = Visibility.Visible;

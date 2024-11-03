@@ -14,12 +14,15 @@ namespace FilmFinder.ViewModel
     public class MovieViewModel
     {
         private readonly ApiClient _apiClient;
-        private Movie _movie;
-        public Movie _selectedMovie;
-        public ObservableCollection<Movie> Movies { get; set; } = new ObservableCollection<Movie>();
-        public ObservableCollection<Movie> Favorites { get; set; } = new ObservableCollection<Movie>();
+        private Film _movie;
+        public Film _selectedMovie;
+        public ObservableCollection<Film> Movies { get; set; } = new ObservableCollection<Film>();
+        public ObservableCollection<Film> Favorites { get; set; } = new ObservableCollection<Film>();
+        private int _requestCount = 0;
+        private const int _maxRequests = 100; 
+        private const int _timeFrameSeconds = 60; 
 
-        public Movie SelectedMovie { 
+        public Film SelectedMovie { 
             get { return _selectedMovie; }
             set 
             { 
@@ -32,7 +35,7 @@ namespace FilmFinder.ViewModel
             }
         }
        
-        public Movie Movie 
+        public Film Movie 
         { get { return _movie; } 
             set 
             { 
@@ -49,30 +52,47 @@ namespace FilmFinder.ViewModel
 
         public async Task LoadMoviesAsync()
         {
+            if (_requestCount >= _maxRequests)
+            {
+                MessageBox.Show("Достигнут лимит запросов. Пожалуйста, подождите.");
+                return;
+            }
             try
             {
-                var movies = await _apiClient.GetMoviesAsync();
+                var filmsResponse = await _apiClient.GetMoviesAsync();
                 Movies.Clear();
 
-                foreach (var movie in movies)
+                foreach (var movie in filmsResponse)
                 {
                     Movies.Add(movie);
+                    await Task.Delay(1000);
                 }
 
                 if (Movies.Any())
                 {
-                    SelectedMovie = Movies.First(); // Установка первого фильма как выбранного
+                    SelectedMovie = Movies.First();
                 }
+                else
+                {
+                    MessageBox.Show("Нет доступных фильмов.");
+                }
+                _requestCount++;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading movies: {ex.Message}");
             }
+            finally
+            {
+                
+                await Task.Delay(TimeSpan.FromSeconds(_timeFrameSeconds));
+                _requestCount = 0;
+            }
         }
         public async Task LoadMovieDetails(int movieId)
         {
-            SelectedMovie = await _apiClient.GetMovieAsync(movieId); // Получение данных о фильме по ID
-            OnPropertyChanged(nameof(SelectedMovie)); // Уведомление об изменении свойства
+            SelectedMovie = await _apiClient.GetMovieAsync(movieId); 
+            OnPropertyChanged(nameof(SelectedMovie)); 
         }
 
 

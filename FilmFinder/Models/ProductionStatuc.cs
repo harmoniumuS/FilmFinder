@@ -8,6 +8,11 @@ namespace FilmFinder.Models
 {
     public enum ProductionStatus
     {
-        FILMING, PRE_PRODUCTION, COMPLETED, ANNOUNCED, UNKNOWN, POST_PRODUCTION
+        FILMING, 
+        PRE_PRODUCTION, 
+        COMPLETED, 
+        ANNOUNCED, 
+        UNKNOWN, 
+        POST_PRODUCTION
     }
 }

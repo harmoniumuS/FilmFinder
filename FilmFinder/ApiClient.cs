@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace FilmFinder
 {
@@ -24,17 +25,33 @@ namespace FilmFinder
             _httpClient.DefaultRequestHeaders.Add("X-API-KEY", ApiKey);
         }
         
-        public async Task<List<Movie>> GetMoviesAsync()
+        
+        public async Task<List<Film>> GetMoviesAsync()
         {
             var response = await _httpClient.GetAsync($"{BaseUrl}/films");
             response.EnsureSuccessStatusCode();
+            /*
+                        var jsonResponse = await response.Content.ReadAsStringAsync();
+                        var films = JsonConvert.DeserializeObject<List<Film>>(jsonResponse);
+                        return films;
+            */
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+            };
 
             var jsonResponse = await response.Content.ReadAsStringAsync();
-            var movies = JsonConvert.DeserializeObject<List<Movie>>(jsonResponse);
-            return movies;
+            System.Diagnostics.Debug.WriteLine($"Response JSON: {jsonResponse}");
+            var apiResponse = JsonConvert.DeserializeObject<ApiResponse>(jsonResponse,settings);
+            if (apiResponse?.Films == null)
+            {
+                throw new Exception("Не удалось получить фильмы из ответа API.");
+            }
+            return apiResponse?.Films;
+
         }
 
-        public async Task<Movie> GetMovieAsync(int movieId)
+        public async Task<Film> GetMovieAsync(int movieId)
         {
             var response = await _httpClient.GetAsync($"{BaseUrl}/films/{movieId}");
 
@@ -49,7 +66,7 @@ namespace FilmFinder
             };
 
             var jsonResponse = await response.Content.ReadAsStringAsync();
-            var movie = JsonConvert.DeserializeObject<Movie>(jsonResponse,settings);
+            var movie = JsonConvert.DeserializeObject<Film>(jsonResponse,settings);
             return movie;
         }
     }
