@@ -18,9 +18,7 @@ namespace FilmFinder.ViewModel
         public Film _selectedMovie;
         public ObservableCollection<Film> Movies { get; set; } = new ObservableCollection<Film>();
         public ObservableCollection<Film> Favorites { get; set; } = new ObservableCollection<Film>();
-        private int _requestCount = 0;
-        private const int _maxRequests = 100; 
-        private const int _timeFrameSeconds = 60; 
+       
 
         public Film SelectedMovie { 
             get { return _selectedMovie; }
@@ -52,11 +50,7 @@ namespace FilmFinder.ViewModel
 
         public async Task LoadMoviesAsync()
         {
-            if (_requestCount >= _maxRequests)
-            {
-                MessageBox.Show("Достигнут лимит запросов. Пожалуйста, подождите.");
-                return;
-            }
+       
             try
             {
                 var filmsResponse = await _apiClient.GetMoviesAsync();
@@ -76,17 +70,11 @@ namespace FilmFinder.ViewModel
                 {
                     MessageBox.Show("Нет доступных фильмов.");
                 }
-                _requestCount++;
+              
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading movies: {ex.Message}");
-            }
-            finally
-            {
-                
-                await Task.Delay(TimeSpan.FromSeconds(_timeFrameSeconds));
-                _requestCount = 0;
             }
         }
         public async Task LoadFilmDetails(int movieId)

@@ -10,7 +10,9 @@ namespace FilmFinder.Models
 {
     public class Genre
     {
+        public int Id { get; set; }
         [JsonProperty("genre")]
         public string GenreName { get; set;}
+
     }
 }

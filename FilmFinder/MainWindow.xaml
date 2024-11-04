@@ -13,10 +13,11 @@
         <StackPanel Grid.Column="1" Margin="10">
             <TextBlock Text="{Binding SelectedMovie.NameRu}" FontSize="16" FontWeight="Bold" />
             <TextBlock Text="{Binding SelectedMovie.Year}" />
-            <TextBlock Text="{Binding SelectedMovie.RatingKinopoisk}" />
-            <TextBlock Text="{Binding SelectedMovie.Description}" TextWrapping="Wrap" Margin="0,5,0,0" />
+            <TextBlock Text="Рейтинг Кинопоиск: " FontWeight="Bold" />
+            <TextBlock Text="{Binding SelectedMovie.RatingKinopoisk}" FontWeight="Bold" />
 
             <Image Source="{Binding SelectedMovie.PosterUrl}" Height="200" />
+            <TextBlock Text="{Binding SelectedMovie.Description}" TextWrapping="Wrap" Height="157" />
         </StackPanel>
     </Grid>
 </Window>

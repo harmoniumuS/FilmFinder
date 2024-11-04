@@ -9,6 +9,7 @@ namespace FilmFinder.Models
 {
     public class Film
     {
+        public int Id { get; set; }
         [JsonProperty("kinopoiskId")]
         public int KinopoiskId { get; set; }
 
