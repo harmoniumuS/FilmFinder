@@ -82,7 +82,14 @@ namespace FilmFinder.ViewModel
             SelectedMovie = await _apiClient.GetMovieAsync(movieId); 
             OnPropertyChanged(nameof(SelectedMovie)); 
         }
-
+        private async void AddFavorites_Click(object sender,RoutedEventArgs e)
+        {
+            if (SelectedMovie!=null)
+            {
+                await _apiClient.AddToFavorites(SelectedMovie.Id);
+                MessageBox.Show("Текст добавлен в избранное!");
+            }
+        }
 
         public void OnPropertyChanged(string propertyName)
         {

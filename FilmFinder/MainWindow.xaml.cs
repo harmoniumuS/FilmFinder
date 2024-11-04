@@ -24,5 +24,16 @@ namespace FilmFinder
             _viewModel = new MovieViewModel();
             DataContext = _viewModel;
         }
+
+        private void AddToFavorites_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ShowFavorites_Click(object sender, RoutedEventArgs e)
+        {
+            FavoritesFilms favoritesFilmsPage = new FavoritesFilms();
+            NavigationService.Navigate(favoritesFilmsPage);
+        }
     }
 }

@@ -19,6 +19,7 @@ namespace FilmFinder.DataBase
         public DbSet<Genre> Genres { get; set; }
         public DbSet<CountryFilm> CountryFilm { get; set; }
         public DbSet<GenreFilm> GenreFilm { get; set; }
+        public DbSet<FavoriteFilm> FavoriteFilms { get; set;}
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

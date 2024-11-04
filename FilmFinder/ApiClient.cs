@@ -60,7 +60,22 @@ namespace FilmFinder
             return apiResponse?.Films;
 
         }
-
+        public async Task AddToFavorites(int filmId)
+        {
+            using (var db = new AppDbContext())
+            {
+                var favoriteFilm = new FavoriteFilm { FilmId = filmId };
+                db.FavoriteFilms.Add(favoriteFilm);
+                await db.SaveChangesAsync();
+            }
+        }
+        public async Task<List<Film>> GetFavoriteFilmsAsync()
+        {
+            using (var db = new AppDbContext())
+            {
+                return await db.FavoriteFilms.Include(f => f.Film).Select(f => f.Film).ToListAsync();
+            }
+        }
         public async Task<Film> GetMovieAsync(int filmId)
         {
 
