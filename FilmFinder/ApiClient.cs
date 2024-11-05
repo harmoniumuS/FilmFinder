@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using FilmFinder.DataBase;
 using Microsoft.EntityFrameworkCore;
+using System.Windows;
 
 namespace FilmFinder
 {
@@ -66,7 +67,15 @@ namespace FilmFinder
             {
                 var favoriteFilm = new FavoriteFilm { FilmId = filmId };
                 db.FavoriteFilms.Add(favoriteFilm);
-                await db.SaveChangesAsync();
+                try
+                {
+                    await db.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    var innerException = ex.InnerException;
+                    MessageBox.Show(innerException?.Message ?? "Неизвестная ошибка");
+                }
             }
         }
         public async Task<List<Film>> GetFavoriteFilmsAsync()

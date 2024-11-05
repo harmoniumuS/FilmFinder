@@ -1,4 +1,7 @@
-﻿using FilmFinder.ViewModel;
+﻿using FilmFinder.DataBase;
+using FilmFinder.ViewModel;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.Eventing.Reader;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,15 +28,15 @@ namespace FilmFinder
             DataContext = _viewModel;
         }
 
-        private void AddToFavorites_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void ShowFavorites_Click(object sender, RoutedEventArgs e)
         {
-            FavoritesFilms favoritesFilmsPage = new FavoritesFilms();
-            NavigationService.Navigate(favoritesFilmsPage);
+            var favoritesFilmsPage = new FavoritesFilms();
+            var favoritesViewModel = new FavoritesViewModel();
+
+            favoritesFilmsPage.DataContext = favoritesViewModel;
+
+            MainFrame.Navigate(favoritesFilmsPage);
         }
     }
 }
