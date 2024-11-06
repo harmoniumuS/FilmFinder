@@ -16,11 +16,7 @@ namespace FilmFinder.ViewModel
 {
     public class MovieViewModel
     {
-        private readonly ApiClient _apiClient;
-        private Film _movie;
         public Film _selectedMovie;
-        private bool _isFavorite;
-        private bool _showFavoritesOnly;
         public ObservableCollection<Film> Movies { get; set; } = new ObservableCollection<Film>();
         public ObservableCollection<Film> Favorites { get; set; } = new ObservableCollection<Film>();
 
@@ -30,12 +26,10 @@ namespace FilmFinder.ViewModel
             get { return _showFavoritesOnly; }
             set
             {
-                if (_showFavoritesOnly != value)
-                {
                     _showFavoritesOnly = value;
                     OnPropertyChanged(nameof(ShowFavoritesOnly));
                     LoadMoviesAsync();
-                }
+                
             }
         }
        
@@ -63,7 +57,7 @@ namespace FilmFinder.ViewModel
                 }
             }
         }
-        public string FavoriteButtonText => IsFavorite ? "Удалить из избранного" : "Добавить в избранное";
+        public string FavoriteButtonText => IsFavorite ? "Добавить в избранное" : "Удалить из избранного.";
         public Film Movie 
         { get { return _movie; } 
             set 
@@ -75,6 +69,11 @@ namespace FilmFinder.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
         public ICommand ToggleFavoriteCommand { get; }
         public ICommand ToggleShowFavoritesCommand { get; }
+        private readonly ApiClient _apiClient;
+        private Film _movie;
+
+        private bool _isFavorite;
+        private bool _showFavoritesOnly;
         public MovieViewModel()
         {
             _apiClient = new ApiClient();
@@ -103,7 +102,7 @@ namespace FilmFinder.ViewModel
                 }
                 else
                 {
-                    filmsResponse = await _apiClient.GetMoviesAsync();
+                    filmsResponse = await _apiClient.GetFilmsAsync();
                 }
                
                 Movies.Clear();
@@ -134,7 +133,7 @@ namespace FilmFinder.ViewModel
                 {
                     if (IsFavorite)
                     {
-                        var favoriteFilm = await db.FavoriteFilms.FirstOrDefaultAsync(f => f.Id == SelectedMovie.Id);
+                        var favoriteFilm = await db.FavoriteFilms.FirstOrDefaultAsync(f => f.FilmId == SelectedMovie.Id);
                         if (favoriteFilm != null)
                         {
                             db.FavoriteFilms.Remove(favoriteFilm);
@@ -142,6 +141,7 @@ namespace FilmFinder.ViewModel
                         }
                         IsFavorite = false;
                         MessageBox.Show("Фильм убран из избранного!");
+                        OnPropertyChanged(nameof(FavoriteButtonText));
                     }
                     else
                     {
@@ -150,32 +150,34 @@ namespace FilmFinder.ViewModel
                         await db.SaveChangesAsync();
                         IsFavorite = true;
                         MessageBox.Show("Фильм добавлен в избранные!");
-            }
+                        OnPropertyChanged(nameof(FavoriteButtonText));
+                    }
                 }
             }
             
         }
         public async Task LoadFilmDetails(int movieId)
         {
-            SelectedMovie = await _apiClient.GetMovieAsync(movieId); 
+            SelectedMovie = await _apiClient.GetFilmAsync(movieId); 
             OnPropertyChanged(nameof(SelectedMovie)); 
         }
         public async Task AddToFavorites(int filmId)
         {
             await _apiClient.AddToFavorites(filmId);
-            Favorites.Add(await _apiClient.GetMovieAsync(filmId));
+            Favorites.Add(await _apiClient.GetFilmAsync(filmId));
         }
 
+       
+        public void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
         private async void CheckIsFavorite(int filmId)
         {
             using (var db = new AppDbContext())
             {
                 IsFavorite = await db.FavoriteFilms.AnyAsync(f => f.FilmId == filmId);
             }
-        }
-        public void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

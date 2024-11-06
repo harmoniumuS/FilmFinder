@@ -7,8 +7,9 @@ namespace FilmFinder.ViewModel
 {
     public class FavoritesViewModel
     {
-        private readonly ApiClient _apiClient;
+       
         public ObservableCollection<Film> FavoriteFilms { get; set; } = new ObservableCollection<Film>();
+        private readonly ApiClient _apiClient;
 
         public FavoritesViewModel()
         { 

@@ -29,7 +29,7 @@ namespace FilmFinder
         }
         
         
-        public async Task<List<Film>> GetMoviesAsync()
+        public async Task<List<Film>> GetFilmsAsync()
         {
             using (var db = new AppDbContext())
             {
@@ -85,7 +85,7 @@ namespace FilmFinder
                 return await db.FavoriteFilms.Include(f => f.Film).Select(f => f.Film).ToListAsync();
             }
         }
-        public async Task<Film> GetMovieAsync(int filmId)
+        public async Task<Film> GetFilmAsync(int filmId)
         {
 
             using (var db = new AppDbContext())
